@@ -35,7 +35,6 @@ local RecordStart = 0
 
 local function SetupCharacter()
 	Character = Player.Character or Player.CharacterAdded:Wait()
-
 	Humanoid = Character:WaitForChild("Humanoid")
 	Root = Character:WaitForChild("HumanoidRootPart")
 end
@@ -72,24 +71,22 @@ MainCorner.Parent = Main
 
 
 --------------------------------------------------
--- BUTTON
+-- BUTTON CREATOR
 --------------------------------------------------
 
-local function CreateButton(Name, Text, X, Y, Width, Parent)
-
+local function CreateButton(name, text, x, y, width, parent)
 	local Button = Instance.new("TextButton")
 
-	Button.Name = Name
-	Button.Text = Text
-
-	Button.Position = UDim2.fromOffset(X, Y)
-	Button.Size = UDim2.fromOffset(Width or 85, 35)
+	Button.Name = name
+	Button.Text = text
+	Button.Position = UDim2.fromOffset(x, y)
+	Button.Size = UDim2.fromOffset(width or 85, 35)
 
 	Button.BackgroundColor3 = Color3.fromRGB(35, 35, 43)
 	Button.TextColor3 = Color3.new(1, 1, 1)
-
 	Button.BorderSizePixel = 0
-	Button.Parent = Parent or Main
+
+	Button.Parent = parent or Main
 
 	local Corner = Instance.new("UICorner")
 	Corner.CornerRadius = UDim.new(0, 7)
@@ -100,7 +97,7 @@ end
 
 
 --------------------------------------------------
--- TITLE
+-- BUTTONS
 --------------------------------------------------
 
 local Title = CreateButton(
@@ -110,11 +107,6 @@ local Title = CreateButton(
 	10,
 	280
 )
-
-
---------------------------------------------------
--- BUTTONS
---------------------------------------------------
 
 local RecordButton = CreateButton(
 	"Record",
@@ -137,7 +129,6 @@ local PauseButton = CreateButton(
 	55
 )
 
-
 local StopButton = CreateButton(
 	"Stop",
 	"■ STOP",
@@ -158,7 +149,6 @@ local ESPButton = CreateButton(
 	200,
 	100
 )
-
 
 local SpeedButton = CreateButton(
 	"Speed",
@@ -194,12 +184,9 @@ local CarryButton = CreateButton(
 	275
 )
 
-CarryButton.BackgroundColor3 =
-	Color3.fromRGB(45, 35, 50)
-
 
 --------------------------------------------------
--- NAME BOX
+-- NAME
 --------------------------------------------------
 
 local NameBox = Instance.new("TextBox")
@@ -211,13 +198,10 @@ NameBox.Text = ""
 NameBox.Position = UDim2.fromOffset(10, 235)
 NameBox.Size = UDim2.fromOffset(275, 35)
 
-NameBox.BackgroundColor3 =
-	Color3.fromRGB(30, 30, 37)
-
-NameBox.TextColor3 =
-	Color3.new(1, 1, 1)
-
+NameBox.BackgroundColor3 = Color3.fromRGB(30, 30, 37)
+NameBox.TextColor3 = Color3.new(1, 1, 1)
 NameBox.BorderSizePixel = 0
+
 NameBox.Parent = Main
 
 local NameCorner = Instance.new("UICorner")
@@ -232,21 +216,16 @@ NameCorner.Parent = NameBox
 local TrackList = Instance.new("ScrollingFrame")
 
 TrackList.Name = "TrackList"
-
 TrackList.Position = UDim2.fromOffset(10, 280)
 TrackList.Size = UDim2.fromOffset(275, 120)
 
-TrackList.BackgroundColor3 =
-	Color3.fromRGB(27, 27, 33)
-
+TrackList.BackgroundColor3 = Color3.fromRGB(27, 27, 33)
 TrackList.BorderSizePixel = 0
 TrackList.ScrollBarThickness = 4
 
 TrackList.Parent = Main
 
-
 local ListLayout = Instance.new("UIListLayout")
-
 ListLayout.Padding = UDim.new(0, 4)
 ListLayout.Parent = TrackList
 
@@ -264,8 +243,7 @@ local TFButton = CreateButton(
 	Gui
 )
 
-TFButton.Position =
-	UDim2.new(1, -60, 0.5, -25)
+TFButton.Position = UDim2.new(1, -60, 0.5, -25)
 
 
 --------------------------------------------------
@@ -285,18 +263,12 @@ local CloseButton = CreateButton(
 -- PATH
 --------------------------------------------------
 
-local PathFolder =
-	workspace:FindFirstChild("TrackFlowPath")
+local PathFolder = workspace:FindFirstChild("TrackFlowPath")
 
 if not PathFolder then
-
 	PathFolder = Instance.new("Folder")
-
-	PathFolder.Name =
-		"TrackFlowPath"
-
-	PathFolder.Parent =
-		workspace
+	PathFolder.Name = "TrackFlowPath"
+	PathFolder.Parent = workspace
 end
 
 
@@ -304,32 +276,27 @@ end
 -- STATUS
 --------------------------------------------------
 
-local function SetStatus(Text)
-	Title.Text = Text
+local function Status(text)
+	Title.Text = text
 end
 
 
 --------------------------------------------------
--- CLEAR PATH
+-- CLEAR ESP
 --------------------------------------------------
 
 local function ClearPath()
-
-	for _, Object in ipairs(
-		PathFolder:GetChildren()
-	) do
-
-		Object:Destroy()
+	for _, object in ipairs(PathFolder:GetChildren()) do
+		object:Destroy()
 	end
 end
 
 
 --------------------------------------------------
--- DRAW PATH
+-- DRAW ESP
 --------------------------------------------------
 
 local function DrawPath()
-
 	ClearPath()
 
 	if not ESP then
@@ -340,106 +307,76 @@ local function DrawPath()
 		return
 	end
 
+	for i = 1, #Tracks - 1 do
+		local A = Tracks[i].CFrame
+		local B = Tracks[i + 1].CFrame
 
-	for Index = 1, #Tracks - 1 do
-
-		local A =
-			Tracks[Index].CFrame
-
-		local B =
-			Tracks[Index + 1].CFrame
-
-
-		local Distance =
-			(A.Position - B.Position).Magnitude
-
+		local Distance = (A.Position - B.Position).Magnitude
 
 		if Distance > 0.05 then
-
-			local Part =
-				Instance.new("Part")
+			local Part = Instance.new("Part")
 
 			Part.Anchored = true
 			Part.CanCollide = false
 			Part.CanTouch = false
 			Part.CanQuery = false
 
-			Part.Material =
-				Enum.Material.Neon
+			Part.Material = Enum.Material.Neon
+			Part.Size = Vector3.new(0.1, 0.1, Distance)
 
-			Part.Size =
-				Vector3.new(
-					0.1,
-					0.1,
-					Distance
-				)
+			Part.CFrame = CFrame.lookAt(
+				(A.Position + B.Position) / 2,
+				B.Position
+			)
 
-
-			Part.CFrame =
-				CFrame.lookAt(
-					(A.Position + B.Position) / 2,
-					B.Position
-				)
-
-
-			Part.Parent =
-				PathFolder
+			Part.Parent = PathFolder
 		end
 	end
 end
 
 
 --------------------------------------------------
--- MOVE CHARACTER
+-- MOVE
+--
+-- PENTING:
+-- Fungsi ini TIDAK menyentuh:
+-- Humanoid
+-- Animator
+-- AnimationTrack
+-- WalkSpeed
+-- AutoRotate
+-- PlatformStand
+--
+-- Hanya memindahkan MODEL karakter.
 --------------------------------------------------
 
-local function MoveCharacter(TargetCFrame)
-
-	if not Character then
+local function MoveCharacter(targetCFrame)
+	if not Character or not Character.Parent then
 		return
 	end
 
-	if not Character.Parent then
-		return
-	end
-
-	Character:PivotTo(TargetCFrame)
+	Character:PivotTo(targetCFrame)
 end
 
 
 --------------------------------------------------
 -- CARRY MODE
+--
+-- Hanya pilihan/penanda.
+-- TIDAK MENGUBAH ANIMASI APAPUN.
 --------------------------------------------------
 
 CarryButton.MouseButton1Click:Connect(function()
-
-	CarryMode =
-		not CarryMode
-
+	CarryMode = not CarryMode
 
 	if CarryMode then
-
-		CarryButton.Text =
-			"CARRY ON"
-
-		CarryButton.BackgroundColor3 =
-			Color3.fromRGB(70, 45, 80)
-
-		SetStatus(
-			"CARRY MODE"
-		)
-
+		CarryButton.Text = "CARRY ON"
+		CarryButton.BackgroundColor3 = Color3.fromRGB(70, 45, 80)
+		Status("CARRY MODE")
 	else
-
-		CarryButton.Text =
-			"CARRY OFF"
-
-		CarryButton.BackgroundColor3 =
-			Color3.fromRGB(45, 35, 50)
-
-		SetStatus(
-			"NORMAL MODE"
-		)
+		CarryButton.Text = "CARRY OFF"
+		CarryButton.BackgroundColor3 = Color3.fromRGB(35, 35, 43)
+		Status("NORMAL MODE")
 	end
 end)
 
@@ -449,18 +386,17 @@ end)
 --------------------------------------------------
 
 RecordButton.MouseButton1Click:Connect(function()
-
 	if Recording then
-
 		Recording = false
 
-		SetStatus(
-			"REC DONE"
-		)
+		if CarryMode then
+			Status("REC DONE • CARRY")
+		else
+			Status("REC DONE")
+		end
 
 		return
 	end
-
 
 	Tracks = {}
 
@@ -471,23 +407,13 @@ RecordButton.MouseButton1Click:Connect(function()
 	PlayTime = 0
 	TrackIndex = 1
 
-	RecordStart =
-		os.clock()
-
+	RecordStart = os.clock()
 	LastSample = 0
 
-
 	if CarryMode then
-
-		SetStatus(
-			"REC • CARRY"
-		)
-
+		Status("RECORDING • CARRY")
 	else
-
-		SetStatus(
-			"RECORDING"
-		)
+		Status("RECORDING")
 	end
 end)
 
@@ -497,16 +423,10 @@ end)
 --------------------------------------------------
 
 PlayButton.MouseButton1Click:Connect(function()
-
 	if #Tracks < 2 then
-
-		SetStatus(
-			"NO TRACK"
-		)
-
+		Status("NO TRACK")
 		return
 	end
-
 
 	Recording = false
 	Playing = true
@@ -515,23 +435,12 @@ PlayButton.MouseButton1Click:Connect(function()
 	PlayTime = 0
 	TrackIndex = 1
 
-
-	MoveCharacter(
-		Tracks[1].CFrame
-	)
-
+	MoveCharacter(Tracks[1].CFrame)
 
 	if CarryMode then
-
-		SetStatus(
-			"PLAY • CARRY"
-		)
-
+		Status("PLAY • CARRY")
 	else
-
-		SetStatus(
-			"PLAYING"
-		)
+		Status("PLAYING")
 	end
 end)
 
@@ -541,35 +450,19 @@ end)
 --------------------------------------------------
 
 PauseButton.MouseButton1Click:Connect(function()
-
 	if not Playing then
 		return
 	end
 
-
-	Paused =
-		not Paused
-
+	Paused = not Paused
 
 	if Paused then
-
-		SetStatus(
-			"PAUSED"
-		)
-
+		Status("PAUSED")
 	else
-
 		if CarryMode then
-
-			SetStatus(
-				"PLAY • CARRY"
-			)
-
+			Status("PLAY • CARRY")
 		else
-
-			SetStatus(
-				"PLAYING"
-			)
+			Status("PLAYING")
 		end
 	end
 end)
@@ -580,14 +473,11 @@ end)
 --------------------------------------------------
 
 StopButton.MouseButton1Click:Connect(function()
-
 	Recording = false
 	Playing = false
 	Paused = false
 
-	SetStatus(
-		"STOP"
-	)
+	Status("STOP")
 end)
 
 
@@ -596,66 +486,38 @@ end)
 --------------------------------------------------
 
 RewindButton.MouseButton1Click:Connect(function()
-
 	if #Tracks < 2 then
 		return
 	end
 
-
-	PlayTime =
-		math.max(
-			0,
-			PlayTime - 1
-		)
-
+	PlayTime = math.max(0, PlayTime - 1)
 	TrackIndex = 1
 
-
-	while
-		TrackIndex < #Tracks
-		and
-		Tracks[TrackIndex + 1].Time
-			<= PlayTime
-	do
+	while TrackIndex < #Tracks
+		and Tracks[TrackIndex + 1].Time <= PlayTime do
 
 		TrackIndex += 1
 	end
 
-
 	if TrackIndex < #Tracks then
+		local A = Tracks[TrackIndex]
+		local B = Tracks[TrackIndex + 1]
 
-		local A =
-			Tracks[TrackIndex]
-
-		local B =
-			Tracks[TrackIndex + 1]
-
-
-		local Difference =
-			math.max(
-				B.Time - A.Time,
-				0.001
-			)
-
-
-		local Alpha =
-			math.clamp(
-				(PlayTime - A.Time)
-				/ Difference,
-				0,
-				1
-			)
-
-
-		MoveCharacter(
-			A.CFrame:Lerp(
-				B.CFrame,
-				Alpha
-			)
+		local Difference = math.max(
+			B.Time - A.Time,
+			0.001
 		)
 
-	else
+		local Alpha = math.clamp(
+			(PlayTime - A.Time) / Difference,
+			0,
+			1
+		)
 
+		MoveCharacter(
+			A.CFrame:Lerp(B.CFrame, Alpha)
+		)
+	else
 		MoveCharacter(
 			Tracks[#Tracks].CFrame
 		)
@@ -668,12 +530,8 @@ end)
 --------------------------------------------------
 
 SpeedButton.MouseButton1Click:Connect(function()
-
-	SpeedIndex =
-		SpeedIndex % #Speeds + 1
-
-	SpeedButton.Text =
-		Speeds[SpeedIndex] .. "x"
+	SpeedIndex = SpeedIndex % #Speeds + 1
+	SpeedButton.Text = Speeds[SpeedIndex] .. "x"
 end)
 
 
@@ -682,20 +540,12 @@ end)
 --------------------------------------------------
 
 LoopButton.MouseButton1Click:Connect(function()
-
-	Loop =
-		not Loop
-
+	Loop = not Loop
 
 	if Loop then
-
-		LoopButton.Text =
-			"LOOP ON"
-
+		LoopButton.Text = "LOOP ON"
 	else
-
-		LoopButton.Text =
-			"LOOP OFF"
+		LoopButton.Text = "LOOP OFF"
 	end
 end)
 
@@ -705,22 +555,13 @@ end)
 --------------------------------------------------
 
 ESPButton.MouseButton1Click:Connect(function()
-
-	ESP =
-		not ESP
-
+	ESP = not ESP
 
 	if ESP then
-
-		ESPButton.Text =
-			"ESP ON"
-
+		ESPButton.Text = "ESP ON"
 	else
-
-		ESPButton.Text =
-			"ESP OFF"
+		ESPButton.Text = "ESP OFF"
 	end
-
 
 	DrawPath()
 end)
@@ -731,90 +572,53 @@ end)
 --------------------------------------------------
 
 SaveButton.MouseButton1Click:Connect(function()
-
 	if #Tracks < 2 then
-
-		SetStatus(
-			"NO TRACK"
-		)
-
+		Status("NO TRACK")
 		return
 	end
-
 
 	local TrackName
 
 	if NameBox.Text ~= "" then
-
-		TrackName =
-			NameBox.Text
-
+		TrackName = NameBox.Text
 	else
-
-		TrackName =
-			"Track " ..
-			(#SavedTracks + 1)
+		TrackName = "Track " .. (#SavedTracks + 1)
 	end
-
 
 	SavedTracks[TrackName] = {}
 
-
-	for Index, Data in ipairs(Tracks) do
-
-		SavedTracks[TrackName][Index] = {
-
-			Time =
-				Data.Time,
-
-			CFrame =
-				Data.CFrame
+	for i, data in ipairs(Tracks) do
+		SavedTracks[TrackName][i] = {
+			Time = data.Time,
+			CFrame = data.CFrame
 		}
 	end
 
-
-	local TrackButton =
-		CreateButton(
-			TrackName,
-			TrackName,
-			0,
-			0,
-			255,
-			TrackList
-		)
-
+	local TrackButton = CreateButton(
+		TrackName,
+		TrackName,
+		0,
+		0,
+		255,
+		TrackList
+	)
 
 	TrackButton.MouseButton1Click:Connect(function()
-
 		Tracks = {}
 
-
-		for Index, Data in ipairs(
-			SavedTracks[TrackName]
-		) do
-
-			Tracks[Index] = {
-
-				Time =
-					Data.Time,
-
-				CFrame =
-					Data.CFrame
+		for i, data in ipairs(SavedTracks[TrackName]) do
+			Tracks[i] = {
+				Time = data.Time,
+				CFrame = data.CFrame
 			}
 		end
-
 
 		PlayTime = 0
 		TrackIndex = 1
 
-
 		DrawPath()
 
-
-		SetStatus(
-			"LOADED " ..
-			TrackName
-		)
+		Status("LOADED " .. TrackName)
 	end)
 end)
 
@@ -824,7 +628,6 @@ end)
 --------------------------------------------------
 
 CloseButton.MouseButton1Click:Connect(function()
-
 	Main.Visible = false
 	TFButton.Visible = true
 end)
@@ -835,7 +638,6 @@ end)
 --------------------------------------------------
 
 TFButton.MouseButton1Click:Connect(function()
-
 	Main.Visible = true
 	TFButton.Visible = false
 end)
@@ -846,7 +648,6 @@ end)
 --------------------------------------------------
 
 RunService.Heartbeat:Connect(function()
-
 	if not Recording then
 		return
 	end
@@ -855,26 +656,14 @@ RunService.Heartbeat:Connect(function()
 		return
 	end
 
+	local CurrentTime = os.clock() - RecordStart
 
-	local CurrentTime =
-		os.clock() -
-		RecordStart
-
-
-	if CurrentTime - LastSample
-		>= SampleRate then
-
-		LastSample =
-			CurrentTime
-
+	if CurrentTime - LastSample >= SampleRate then
+		LastSample = CurrentTime
 
 		Tracks[#Tracks + 1] = {
-
-			Time =
-				CurrentTime,
-
-			CFrame =
-				Root.CFrame
+			Time = CurrentTime,
+			CFrame = Character:GetPivot()
 		}
 	end
 end)
@@ -884,8 +673,7 @@ end)
 -- PLAY LOOP
 --------------------------------------------------
 
-RunService.Heartbeat:Connect(function(DeltaTime)
-
+RunService.Heartbeat:Connect(function(deltaTime)
 	if not Playing then
 		return
 	end
@@ -898,50 +686,31 @@ RunService.Heartbeat:Connect(function(DeltaTime)
 		return
 	end
 
-
-	if not Character
-		or not Character.Parent then
-
+	if not Character or not Character.Parent then
 		SetupCharacter()
-
 		return
 	end
 
+	PlayTime += deltaTime * Speeds[SpeedIndex]
 
-	PlayTime +=
-		DeltaTime *
-		Speeds[SpeedIndex]
-
-
-	while
-		TrackIndex < #Tracks
-		and
-		Tracks[TrackIndex + 1].Time
-			<= PlayTime
-	do
+	while TrackIndex < #Tracks
+		and Tracks[TrackIndex + 1].Time <= PlayTime do
 
 		TrackIndex += 1
 	end
 
-
 	if TrackIndex >= #Tracks then
-
 		if Loop then
-
 			PlayTime = 0
 			TrackIndex = 1
 
 			MoveCharacter(
 				Tracks[1].CFrame
 			)
-
 		else
-
 			Playing = false
 
-			SetStatus(
-				"PLAY DONE"
-			)
+			Status("PLAY DONE")
 
 			MoveCharacter(
 				Tracks[#Tracks].CFrame
@@ -951,38 +720,24 @@ RunService.Heartbeat:Connect(function(DeltaTime)
 		return
 	end
 
+	local A = Tracks[TrackIndex]
+	local B = Tracks[TrackIndex + 1]
 
-	local A =
-		Tracks[TrackIndex]
-
-	local B =
-		Tracks[TrackIndex + 1]
-
-
-	local Difference =
-		math.max(
-			B.Time - A.Time,
-			0.001
-		)
-
-
-	local Alpha =
-		math.clamp(
-			(PlayTime - A.Time)
-			/ Difference,
-			0,
-			1
-		)
-
-
-	local NewCFrame =
-		A.CFrame:Lerp(
-			B.CFrame,
-			Alpha
-		)
-
-
-	MoveCharacter(
-		NewCFrame
+	local Difference = math.max(
+		B.Time - A.Time,
+		0.001
 	)
+
+	local Alpha = math.clamp(
+		(PlayTime - A.Time) / Difference,
+		0,
+		1
+	)
+
+	local TargetCFrame = A.CFrame:Lerp(
+		B.CFrame,
+		Alpha
+	)
+
+	MoveCharacter(TargetCFrame)
 end)
